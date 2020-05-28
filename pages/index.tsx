@@ -16,7 +16,7 @@ interface IVideo {
 const getServerSideProps = async () => {
   const res = await fetch('http://127.0.0.1:7001/temp');
   const data = await res.json();
-  console.log('list: ', data);
+  console.log('list data: ', data);
 
   // By returning { props: posts }, the Blog component
   // will receive `posts` as a prop at build time
