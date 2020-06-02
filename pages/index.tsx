@@ -1,88 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import a from 'next/link';
-import { InferGetServerSidePropsType } from 'next';
-import Head from '../components/head';
-import Tabs from '../components/Tabs';
-import Comment, { CommentItem } from '../components/Comment';
-import Brief from '../components/Brief';
-import Picture, { PictureItem } from '../components/Picture';
-import RelativeVideo from '../components/RelativeVideo';
+/*
+ * @Description: 该方式使用react写页面，并通过next打包输出html文件，可在componentDidMount中获取数据(在客户端获取数据)
+ * @Author: Hexon
+ * @Date: 2020-06-02 16:56:14
+ * @LastEditors: Hexon
+ * @LastEditTime: 2020-06-02 19:08:41
+ */
 
-interface IVideo {
-  src: string;
-  name: string;
-}
-const getServerSideProps = async () => {
-  const res = await fetch('http://127.0.0.1:7001/temp');
-  const data = await res.json();
-  console.log('list data: ', data);
+import React from 'react';
+import fetch from '../libs/fetch';
+import Comment from '../components/Comment';
 
-  // By returning { props: posts }, the Blog component
-  // will receive `posts` as a prop at build time
-  return {
-    props: {
-      data,
-    },
-  };
-};
-
-const Home = ({
-  data,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const [activeTab, setActiveTab] = useState<number>(1);
-  const [commentsList, setCommentsList] = useState<Array<CommentItem>>([]);
-  const [picturesList, setPicturesList] = useState<Array<PictureItem>>([]);
-  const [brief, setBrief] = useState<string>('');
-  const [videosList, setVideosList] = useState<Array<IVideo>>([]);
-
-  const tabsList = [
-    {
-      label: '评论',
-    },
-    {
-      label: '图文',
-    },
-    {
-      label: '简介',
-    },
-    {
-      label: '相关视频',
-    },
-  ];
-
-  const onChangeTab = (index: number) => {
-    setActiveTab(index);
+export default class ReactStatic extends React.Component {
+  state = {
+    list: [],
   };
 
-  const Content: Array<React.ReactNode> = [
-    <Comment commentsList={commentsList} />,
-    <Picture />,
-    <Brief />,
-    <RelativeVideo />,
-  ];
+  componentDidMount() {
+    console.log('index componentDidMount');
+    this.fetchData();
+  }
 
-  useEffect(() => {
-    setCommentsList(data?.list || []);
-  }, []);
+  async fetchData() {
+    const data = await fetch('http://127.0.0.1:7001/temp');
+    console.log('fetch: ', data);
+    this.setState({
+      // @ts-ignore
+      list: data?.list || [],
+    });
+  }
 
-  return (
-    <div className="page-home">
-      <Head title="home" />
-      <div className="disp" />
-      <div className="tabs">
-        <Tabs tabsItem={tabsList} onChange={onChangeTab} />
-        <div className="tabs-content">{Content[activeTab]}</div>
+  render() {
+    const { list } = this.state;
+    return (
+      <div className="page-react">
+        <div className="content">
+          {list ? <Comment commentsList={list} /> : 'loading'}
+        </div>
+        page - live
       </div>
-
-      <style jsx>{`
-        .disp {
-          width: 100%;
-          height: 250px;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-export default Home;
+    );
+  }
+}
