@@ -3,7 +3,7 @@
  * @Author: Hexon
  * @Date: 2020-05-28 10:45:10
  * @LastEditors: Hexon
- * @LastEditTime: 2020-05-28 16:41:30
+ * @LastEditTime: 2020-06-02 15:20:02
  */
 
 import React from 'react';
@@ -23,7 +23,8 @@ const Comment: React.FC<CommentProps> = (props) => {
   const CommentList: React.ReactNode = (
     <div className="list">
       {commentsList.map((item: CommentItem) => (
-        <div className="comment-item">
+        // TODO: 应该用id或者其他可以唯一标识的字段作为key，此处作为临时使用
+        <div className="comment-item" key={item.content}>
           <img src={item.headImg} alt="head-img" className="head-img" />
           <div className="right">
             <p className="nickname">{item.nickname}</p>
