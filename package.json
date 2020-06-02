@@ -2,14 +2,19 @@
   "name": "create-next-example-app",
   "scripts": {
     "dev": "next",
-    "build": "next build && next export",
-    "start": "next start"
+    "build": "next build ",
+    "start": "next start",
+    "export": "next export",
+    "start:deploy": "next start -p $PORT",
+    "build:deploy": "next build && PORT=3002 npm start:deploy"
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "^9.4.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "swr": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^14.0.5",
